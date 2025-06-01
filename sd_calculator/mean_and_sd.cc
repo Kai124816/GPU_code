@@ -55,16 +55,15 @@ std::vector<float> readCSVFloats(const std::string& filename) {
 
 // Main program
 int main() {
-    std::string filename = "random_numbers.csv";  // Replace with your file name
+    std::string filename = "random_numbers.csv";  // File name
 
     std::vector<float> values = readCSVFloats(filename);
 
-    size_t array_len = values.size();    //Define the number of values
+    size_t numElements = values.size();  //Define the number of values
 
-    std::cout << "Read " << array_len << " float values from " << filename << std::endl;
+    std::cout << "Read " << numElements << " float values from " << filename << std::endl;
 
     float* d_values;     //Array that is copied onto GPU
-    size_t numElements = values.size();
     size_t sizeInBytes = numElements * sizeof(float);
 
     // Allocate device memory for data array
@@ -80,13 +79,13 @@ int main() {
     hipMemcpy(d_sum, &h_sum, sizeof(float), hipMemcpyHostToDevice);  //Copy host running sum to device running sum
 
     int threadsPerBlock = 256;                      // Define the number of threads per block
-    int numBlocks = (array_len + threadsPerBlock - 1) / threadsPerBlock;  //Define number of blocks
+    int numBlocks = (numElements + threadsPerBlock - 1) / threadsPerBlock;  //Define number of blocks
 
-    hipLaunchKernelGGL(updateSum, dim3(numBlocks), dim3(threadsPerBlock), 0, 0, d_sum, d_values, array_len); //Launch Update sum function
+    hipLaunchKernelGGL(updateSum, dim3(numBlocks), dim3(threadsPerBlock), 0, 0, d_sum, d_values, numElements); //Launch Update sum function
 
     hipMemcpy(&h_sum, d_sum, sizeof(float), hipMemcpyDeviceToHost); //Copy the device running sum to the host running sum
 
-    float h_mean = h_sum/array_len;   //Calculate mean
+    float h_mean = h_sum/numElements;   //Calculate mean
 
     std::cout << "Mean: " << std::fixed << std::setprecision(2) << h_mean << std::endl;  //Print mean
 
@@ -98,11 +97,11 @@ int main() {
     h_sum = 0.0f;   //Update running sum for variance
     hipMemcpy(d_sum, &h_sum, sizeof(float), hipMemcpyHostToDevice);  //Update running sum on device
 
-    hipLaunchKernelGGL(updateVariance, dim3(numBlocks), dim3(threadsPerBlock), 0, 0, d_sum, d_values, d_mean, array_len);
+    hipLaunchKernelGGL(updateVariance, dim3(numBlocks), dim3(threadsPerBlock), 0, 0, d_sum, d_values, d_mean, numElements);
 
     hipMemcpy(&h_sum, d_sum, sizeof(float), hipMemcpyDeviceToHost); //Copy the device running sum to the host running sum
 
-    float variance = h_sum/array_len;
+    float variance = h_sum/numElements;
 
     std::cout << "Standard Deviation: " << std::fixed << std::setprecision(2) << sqrt(variance) << std::endl;
 
