@@ -44,8 +44,6 @@ std::vector<float> readCSVFloats(const std::string& filename) {
             try {
                 float value = std::stof(cell);
                 data.push_back(value);
-            } catch (const std::invalid_argument& e) {
-                std::cerr << "Warning: Non-float value encountered: " << cell << std::endl;
             }
         }
     }
