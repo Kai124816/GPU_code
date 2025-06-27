@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    vector<int> node_lengths = {100000, 250000, 500000, 750000}
+    vector<int> node_lengths = {100000, 250000, 500000, 750000};
 
     for(int i = 1; i < argc; i++)
     {
