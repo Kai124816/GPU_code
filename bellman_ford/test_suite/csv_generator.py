@@ -48,7 +48,4 @@ def generate_adjacency_list_csv(
 
     print(f"Graph with {num_nodes} nodes and {len(edges)} edges written to '{filename}'.")
 
-generate_adjacency_list_csv("adjacency_list_100000.csv", num_nodes=100000, num_edges=3000000, min_weight=-50, max_weight=50, directed=True)
-generate_adjacency_list_csv("adjacency_list_250000.csv", num_nodes=250000, num_edges=750000, min_weight=-50, max_weight=50, directed=True)
-generate_adjacency_list_csv("adjacency_list_500000.csv", num_nodes=500000, num_edges=1500000, min_weight=-50, max_weight=50, directed=True)
-generate_adjacency_list_csv("adjacency_list_750000.csv", num_nodes=750000, num_edges=2250000, min_weight=-50, max_weight=50, directed=True)
+generate_adjacency_list_csv("adjacency_list_100000_neg_cycle.csv", num_nodes=100000, num_edges=300000, min_weight=-50, max_weight=50, directed=True)
