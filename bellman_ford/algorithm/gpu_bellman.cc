@@ -1,9 +1,11 @@
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include <vector>
 #include <hip/hip_runtime.h>
 #include "gpu_bellman.h"
 
+using namespace std;
 
 int count_edges(const vector<vector<pair<int, int>>>& adj_list)
 {
@@ -139,9 +141,11 @@ vector<int> gpu_bellman(const vector<vector<pair<int, int>>>& adj_list)
     int* d_modified;
     hipMalloc(&d_modified, sizeof(int));
 
+    //Number of rounds through bellman ford
+    int rounds = 0;
 
     //Run Bellman Ford
-    while(h_modified)
+    while(h_modified && rounds < num_nodes-1)
     {
         //Assign Modified to 0
         h_modified = 0;
@@ -157,8 +161,33 @@ vector<int> gpu_bellman(const vector<vector<pair<int, int>>>& adj_list)
         //Copy over modified data
         hipDeviceSynchronize();
         hipMemcpy(&h_modified, d_modified, sizeof(int), hipMemcpyDeviceToHost);
+        rounds++;
     }
 
+    //Negative Cycle Detection
+    if(rounds == num_nodes-1)
+    {
+        //Assign Modified to 0
+        h_modified = 0;
+        hipMemcpy(d_modified, &h_modified, sizeof(int), hipMemcpyHostToDevice);
+        
+        //Alter edges
+        hipLaunchKernelGGL(modify_edge, dim3(num_blocks_0), dim3(threads_per_block_0), 0, 0, d_edges_u, d_edges_v, d_edges_weight, 
+        d_active, d_dist, num_edges);
+
+        //Reset Active Array
+        hipLaunchKernelGGL(modify_active_edges, dim3(num_blocks_1), dim3(threads_per_block_1), 0, 0, d_active, d_modified, num_nodes);
+
+        //Copy over modified data
+        hipDeviceSynchronize();
+        hipMemcpy(&h_modified, d_modified, sizeof(int), hipMemcpyDeviceToHost);
+        if(h_modified)
+        {
+            std::cerr << "Error: Negative-weight cycle detected.\n";
+            return {};
+        }
+    }
+    
     //Copy over distances to vector
     hipMemcpy(h_dist, d_dist, sizeof(int) * num_nodes, hipMemcpyDeviceToHost);
     distances.assign(h_dist, h_dist + num_nodes);

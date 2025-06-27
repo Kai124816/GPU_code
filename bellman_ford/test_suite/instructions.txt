@@ -1,0 +1,7 @@
+Note: Must be run in environment where HIIP is installed
+
+1. Go into test suite folder and compile using command: hipcc tests.cc ../algorithm/gpu_bellman.cc 
+cpu_bellman.cc adjacency_gen.cc -o tests
+2. Run the binary using the command ./tests and include the csv file(s) you want to run the code on
+ex: ./tests adjacency_list_100000.csv adjacency_list_250000.csv adjacency_list_500000.cs
+3. (optional) create a new csv file or files using the csv_generator.py file

@@ -3,8 +3,11 @@
 
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include <vector>
 #include <hip/hip_runtime.h>
+
+using namespace std;
 
 const int INF = 1e9;
 

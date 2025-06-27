@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <tuple>
 #include <string>
 #include <utility> 
 #include "adjacency_gen.h"

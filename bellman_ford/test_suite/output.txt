@@ -1,0 +1,53 @@
+Loading graph from CSV: adjacency_list_100000.csv
+
+Running CPU Bellman-Ford...
+GPU Bellman-Ford on graph with 100000 nodes took 0.368227 seconds.
+
+Running GPU Bellman-Ford...
+GPU Bellman-Ford on graph with 100000 nodes took 0.523618 seconds.
+
+Results match.
+
+
+Loading graph from CSV: adjacency_list_250000.csv
+
+Running CPU Bellman-Ford...
+GPU Bellman-Ford on graph with 250000 nodes took 1.57799 seconds.
+
+Running GPU Bellman-Ford...
+GPU Bellman-Ford on graph with 250000 nodes took 0.338448 seconds.
+
+Results match.
+
+
+Loading graph from CSV: adjacency_list_500000.csv
+
+Running CPU Bellman-Ford...
+GPU Bellman-Ford on graph with 500000 nodes took 6.4266 seconds.
+
+Running GPU Bellman-Ford...
+GPU Bellman-Ford on graph with 500000 nodes took 0.742158 seconds.
+
+Results match.
+
+
+Loading graph from CSV: adjacency_list_750000.csv
+
+Running CPU Bellman-Ford...
+GPU Bellman-Ford on graph with 750000 nodes took 14.2188 seconds.
+
+Running GPU Bellman-Ford...
+GPU Bellman-Ford on graph with 750000 nodes took 1.22424 seconds.
+
+Results match.
+
+
+Loading graph from CSV: adjacency_list_100000_neg_cycle.csv
+
+Running CPU Bellman-Ford...
+GPU Bellman-Ford on graph with 100000 nodes took 165.123 seconds.
+
+Running GPU Bellman-Ford...
+GPU Bellman-Ford on graph with 100000 nodes took 7.23071 seconds.
+
+Results match.
