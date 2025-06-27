@@ -4,6 +4,6 @@
 
 using namespace std;
 
-const int INF = 1e9;
+const int INF1 = 1e9;
 
 vector<int> cpu_bellman(const vector<vector<pair<int, int>>>& adj_list);
