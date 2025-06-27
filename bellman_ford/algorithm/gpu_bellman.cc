@@ -18,19 +18,24 @@ int count_edges(const vector<vector<pair<int, int>>>& adj_list)
 }
 
 
-vector<int> ideal_dimensions(int num_threads)
+vector<int> ideal_dimensions(int num_ops)
 {
     vector<int> x_y;
 
-    if (num_threads > 1024)
+    if (num_ops >= max_concurrent)
     {
         x_y.push_back(1024);
-        x_y.push_back((num_threads + 1023) / 1024);
+        x_y.push_back(208);
+    }
+    else if (num_ops > 1024)
+    {
+        x_y.push_back(1024);
+        x_y.push_back((num_ops + 1023) / 1024);
     }
     else
     {
         int block_size = 64;
-        int x_dim = ((num_threads + block_size - 1) / block_size) * block_size;
+        int x_dim = ((num_ops + block_size - 1) / block_size) * block_size;
         x_y.push_back(x_dim);
         x_y.push_back(1);
     }
@@ -66,18 +71,21 @@ __global__ void modify_edge(
     int num_edges
 ) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    int global_size = blockDim.x * gridDim.x;
 
-    if (idx >= num_edges || active[edges_u[idx]] == 0) return;
+    for (int i = idx; i < num_edges; i += global_size) {
+        int src = edges_u[i];
+        int dest = edges_v[i];
+        int weight = edges_weight[i];
 
-    int src = edges_u[idx];
-    int dest = edges_v[idx];
-    int weight = edges_weight[idx];
+        if (active[src] != 0) {
+            int new_dist = dist[src] + weight;
 
-    int new_dist = dist[src] + weight;
-
-    if (new_dist < dist[dest]) {
-        atomicMin(&dist[dest], new_dist);
-        atomicExch(&active[dest], 2); 
+            if (new_dist < dist[dest]) {
+                atomicMin(&dist[dest], new_dist);
+                atomicExch(&active[dest], 2);
+            }
+        }
     }
 }
 
@@ -85,13 +93,16 @@ __global__ void modify_edge(
 __global__ void modify_active_edges(int* active, int* modified, int num_nodes)
 {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx >= num_nodes) return;
+    int global_size = blockDim.x * gridDim.x;
 
-    if (active[idx] == 0 || active[idx] == 1) {
-        active[idx] = 0;
-    } else {
-        active[idx] = 1;
-        atomicAdd(modified, 1);
+    for(int i=idx; i < num_nodes; i+=global_size)
+    {
+        if (active[i] == 0 || active[i] == 1) {
+            active[i] = 0;
+        } else {
+            active[i] = 1;
+            atomicAdd(modified, 1);
+        }
     }
 }
 
