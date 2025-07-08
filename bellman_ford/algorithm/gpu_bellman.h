@@ -14,7 +14,6 @@ const int max_concurrent = 212992;
 
 int count_edges(const vector<vector<pair<int, int>>>& adj_list);
 vector<int> ideal_dimensions(int num_ops);
-int opps_per_thread(int x, int y, int num_ops);
 void initialize_data(const vector<vector<pair<int, int>>>& adj_list, int* edges_u, int* edges_v, int* edges_weight, 
 int* active, int* dist, int num_nodes);
 __global__ void modify_edge(int* edges_u, int* edges_v, int* edges_weight, int* active, int* dist, int num_edges);
