@@ -1,13 +1,44 @@
-# Ignore object files
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
 *.o
+*.obj
 
-# Ignore executables (no extension, make-style builds)
-# This ignores all files without an extension
-*[!./]*
+# Precompiled Headers
+*.gch
+*.pch
 
-# Ignore common output binaries (explicitly)
-main
-a.out
+# Linker files
+*.ilk
+
+# Debugger Files
+*.pdb
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# debug information files
+*.dwo
 
 # Ignore VSCode settings
 .vscode/
@@ -15,5 +46,5 @@ a.out
 # Ignore macOS dSYM symbol directories
 *.dSYM/
 
-#Ignore text files
+#Ignore output text files
 output.txt
